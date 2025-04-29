@@ -13,6 +13,7 @@ struct SignupView: View {
     @State private var password: String = ""
     @State private var displayName: String = ""
     @State private var errorMessage: String = ""
+    @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var model: UserDisplayNameModel
     
     private var isFormValid: Bool {
@@ -24,6 +25,7 @@ struct SignupView: View {
         do{
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             try await model.updateDisplayName(for: result.user, displayName: displayName)
+            appState.routes.append(.login)
         }catch{
             errorMessage = error.localizedDescription
         }
@@ -48,6 +50,7 @@ struct SignupView: View {
                 Button("Login")
                 {
                     //Redirect to login here
+                    appState.routes.append(.login)
                 }.buttonStyle(.borderless)
                 Spacer()
             }
@@ -60,4 +63,5 @@ struct SignupView: View {
 
 #Preview {
     SignupView().environmentObject(UserDisplayNameModel())
+        .environmentObject(AppState())
 }

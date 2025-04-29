@@ -12,13 +12,15 @@ struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var errorMessage: String = ""
+    @EnvironmentObject private var appState: AppState
     private var isFormValid: Bool {
         !email.isEmptyOrWhiteSpace && !password.isEmptyOrWhiteSpace
     }
     private func login() async
     {
         do{
-            let result = try await Auth.auth().signIn(withEmail: email, password: password)
+            let _ = try await Auth.auth().signIn(withEmail: email, password: password)
+            appState.routes.append(.home)
         }catch{
             errorMessage = error.localizedDescription
         }
@@ -42,6 +44,7 @@ struct LoginView: View {
                 Button("Register")
                 {
                     //Redirect to login here
+                    appState.routes.append(.signup)
                 }.buttonStyle(.borderless)
                 Spacer()
             }
@@ -54,4 +57,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
+        .environmentObject(AppState())
 }
