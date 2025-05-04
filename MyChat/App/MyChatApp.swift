@@ -12,6 +12,7 @@ import FirebaseAuth
 @main
 struct MyChatApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var model = UserDisplayNameModel()
     @StateObject private var appState = AppState()
     var body: some Scene {
         WindowGroup {
@@ -32,7 +33,9 @@ struct MyChatApp: App {
                         HomeView()
                     }
                 }
-            }.environmentObject(appState)
+            }
+            .environmentObject(model)
+            .environmentObject(appState)
         }
     }
 }
